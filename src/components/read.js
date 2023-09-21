@@ -2,6 +2,7 @@ import axios from 'axios';
 import { Table, Button } from 'semantic-ui-react';  
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+ 
 
 export default function Read() { 
     const getData = () => {
@@ -27,12 +28,12 @@ export default function Read() {
         }
     }
      
-    function setDATA(id, firstName, lastName,checkbox) {
+/*     function setDATA(id, firstName, lastName,checkbox) {
         localStorage.setItem('id', id);
         localStorage.setItem('firstName', firstName);
         localStorage.setItem('lastName', lastName);
         localStorage.setItem('checkbox', checkbox);
-    } 
+    }  */
 
     const [APIData, setAPIData] = useState([]);
 
@@ -47,8 +48,9 @@ export default function Read() {
     }, []);
 
     return (
-        <div>
-            <Link to='/create'> <Button>Create</Button> </Link> 
+        <> 
+        <div>  
+            <Link to='/create'> <Button primary>Create</Button> </Link> 
             <Table singleLine>
                 <Table.Header>
                     <Table.Row>
@@ -69,9 +71,9 @@ export default function Read() {
                             <Table.Cell>{data.checkbox ? 'Checked' : 'Unchecked'}</Table.Cell>
  
                             <Table.Cell> 
-                                <Link to={{ pathname: '/update', state: { data } }}> 
-                                     <Button onClick={(e) => {console.log(  data  );
-                                    setDATA(data.id, data.firstName, data.lastName,data.checkbox)} }
+                                <Link to={{ pathname: `/update/${data.id}`  }}> 
+                                     <Button  onClick={(e) => {console.log(  data  );
+                                    /* setDATA(data.id, data.firstName, data.lastName,data.checkbox) */} }
                                     variant="info">
                                     Update</Button> 
                                 </Link>
@@ -84,5 +86,6 @@ export default function Read() {
                 </Table.Body>
             </Table> 
         </div>
+        </>
     );
 }
