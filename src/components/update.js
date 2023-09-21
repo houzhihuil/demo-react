@@ -2,33 +2,33 @@ import React, { useState, useEffect } from 'react';
 import { Button, Checkbox, Form } from 'semantic-ui-react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 
-export default function Update() {
-  const location = useLocation(); 
-  const data = location.state 
-  // const data = location.state ?? { data: {} }; // using nullish coalescing 
-  const { my_id } = useParams();
-  console.log(" my_id: "+ my_id );
-   
-
+export default function Update() { 
+ 
+  const { _id } = useParams();
+  const navigate = useNavigate(); 
 
   const [id, setId] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [checkbox, setCheckbox] = useState(false);
+  const [checkbox, setCheckbox] = useState(false);  
 
-  const navigate = useNavigate();
-
-
-  useEffect(() => {  
-      setId(localStorage.getItem('id'));
-      setFirstName(localStorage.getItem('firstName'));
-      setLastName(localStorage.getItem('lastName'));
-      setCheckbox(localStorage.getItem('checkbox')); 
-  }, []);
-
+  useEffect(() => {
+    axios
+      .get(`https://64e7bf5db0fd9648b7904d83.mockapi.io/fakeData/${_id}`)
+      .then((response) => {
+        setId(response.data.id);
+        setFirstName(response.data.firstName);
+        setLastName(response.data.lastName);
+        setCheckbox(response.data.checkbox); 
+      })
+      .catch((error) => {
+        // Handle the error here, e.g., log it or show a user-friendly message.
+        console.error("Error fetching data:", error);
+      });
+  }, [_id]); 
   const updateAPIData = () => { 
     axios
       .put(`https://64e7bf5db0fd9648b7904d83.mockapi.io/fakeData/${id}`, {
@@ -37,17 +37,10 @@ export default function Update() {
         checkbox
       })
       .then(() => {
-        const updatedData = {
-          ...data,
-          firstName,
-          lastName,
-          checkbox
-        };
-         localStorage.setItem('updateData', JSON.stringify(updatedData));
-
-        // Navigate back to the "Read" page
+        // Navigate to the root page
         navigate('/');
-      });
+      })
+      
   };
 
   return (
